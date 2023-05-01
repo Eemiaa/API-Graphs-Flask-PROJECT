@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "cc7933ef-1ab8-47d1-8762-1133702815b9",
+		"name": "API-Grafos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23054247"
+	},
+	"item": [
+		{
+			"name": "adicionar grafo",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"vertices\":[\"a\",\"b\"],\n    \"arestas\": [{\"a\":\"b\"}]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/adicionar",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"adicionar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "adicionar aresta",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"d\",\n    \"b\":\"c\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/adicionar/aresta",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"adicionar",
+						"aresta"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "numero de vertices",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\n    \"b\":\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/quantidade/vertices",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"quantidade",
+						"vertices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "numero de arestas",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"B\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/quantidade/arestas",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"quantidade",
+						"arestas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "arestas adjacentes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"b\",\n    \"b\":\"d\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/adjacentes/arestas",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"adjacentes",
+						"arestas"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://127.0.0.1:5000",
+			"type": "string"
+		}
+	]
+}
