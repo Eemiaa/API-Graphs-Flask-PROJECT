@@ -1,4 +1,4 @@
-from flask import Flask, make_response, jsonify
+from flask import Flask, make_response
 from Routes.routes import routes_bp
 
 app = Flask(__name__)

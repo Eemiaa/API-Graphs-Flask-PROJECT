@@ -1,3 +1,4 @@
+from flask import jsonify
 class Grafo():
     #Atributos
     def __init__(self, vertices: list, arestas: dict):
@@ -5,16 +6,16 @@ class Grafo():
         self.arestas = arestas
     #Métodos
     def adicionar_grafo(self):
-        return {"Hello":"world"}
+        return jsonify(arestas = self.arestas, vertices = self.vertices)
     def adicionar_aresta(self):
-        return {"Hello":"world"}
+        return {self.vertices:self.arestas}
     def adicionar_vertice(self):
-        return {"Hello":"world"}
+        return {self.vertices:self.arestas}
     
     
     def remover_grafo(self):
-        return {"Hello":"world"}
+        return {self.vertices:self.arestas}
     def remover_vertice(self):
-        return {"Hello":"world"}
+        return {self.vertices:self.arestas}
     def remover_aresta(self):
-        return {"Hello":"world"}
+        return {self.vertices:self.arestas}
