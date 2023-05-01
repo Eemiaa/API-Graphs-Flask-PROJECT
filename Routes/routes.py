@@ -1,4 +1,4 @@
-from flask import make_response, Blueprint
+from flask import make_response, Blueprint, request, jsonify
 from Model.GrafoModel import Grafo
 from Model.OperacoesModel import Operacoes
 
@@ -7,9 +7,14 @@ routes_bp = Blueprint('Routes',__name__)
 
 @routes_bp.route('/grafo/adicionar', methods=['POST'])
 def grafo_adicionar():
-    grafos = Grafo(['a','b'],{'a':'b'})
-    return make_response(grafos.adicionar_grafo())
+    #return make_response(jsonify(b = entrada['b']))
+    #vertices, arestas, nome = request.form.get('vertices','arestas','nome')
+    entrada = request.get_json()
 
+    vertices, arestas, nome = entrada['vertices'], entrada['arestas'], entrada['nome']
+    grafos = Grafo(vertices,arestas, nome)
+    return make_response(grafos.adicionar_grafo())
+    
 @routes_bp.route('/grafo/adicionar/aresta', methods=['POST'])
 def grafo_adicionar_aresta():
     grafos = Grafo(['a','b'],{'a':'b'})
