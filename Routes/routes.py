@@ -17,8 +17,11 @@ def grafo_adicionar():
     
 @routes_bp.route('/grafo/adicionar/aresta', methods=['POST'])
 def grafo_adicionar_aresta():
-    grafos = Grafo(['a','b'],{'a':'b'})
-    return make_response(grafos.adicionar_aresta())
+    entrada = request.get_json()
+    nome, a, b = entrada['nome'], entrada['a'], entrada['b']
+
+    grafos = Grafo(nome=nome)
+    return make_response(grafos.adicionar_aresta(a, b))
 
 @routes_bp.route('/grafo/adicionar/vertice', methods=['POST'])
 def grafo_adicionar_vertice():
