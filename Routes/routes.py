@@ -1,4 +1,4 @@
-from flask import make_response, Blueprint, request, jsonify
+from flask import make_response, Blueprint, request
 from Model.GrafoModel import Grafo
 
 routes_bp = Blueprint('Routes',__name__)
@@ -45,9 +45,12 @@ def grafo_remover_aresta():
 
 @routes_bp.route('/representacaoGrafos/listasAdjacencias', methods=['GET'])
 def listas_adjacencias():
-    return make_response(
-        {"Hello":"world"}
-    )
+    entrada = request.get_json()
+
+    nome = entrada['nome']
+    grafo = Grafo(nome=nome)
+    return make_response(grafo.representacao_listas_adjacencias())
+    
 @routes_bp.route('/representacaoGrafos/matrizesAdjacencias', methods=['GET'])
 def matrizes_adjacencias():
     return make_response(
