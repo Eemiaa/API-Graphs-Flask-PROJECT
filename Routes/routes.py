@@ -1,6 +1,5 @@
 from flask import make_response, Blueprint, request, jsonify
 from Model.GrafoModel import Grafo
-from Model.OperacoesModel import Operacoes
 
 routes_bp = Blueprint('Routes',__name__)
 
@@ -57,14 +56,35 @@ def matrizes_adjacencias():
 
 @routes_bp.route('/grafo/adjacentes/arestas', methods=['GET'])
 def grafo_adjacentes_arestas():
-    return make_response(
-        {"Hello":"world"}
-    )
+    entrada = request.get_json()
+
+    nome, a, b = entrada['nome'], entrada['a'], entrada['b']
+    grafos = Grafo(nome=nome)
+    return make_response(grafos.grafo_aretas_adjacentes(a, b))
+
+
 @routes_bp.route('/grafo/adjacentes/vertices', methods=['GET'])
 def grafo_adjacentes_vertices():
     return make_response(
         {"Hello":"world"}
     )
+
+@routes_bp.route('/grafo/quantidade/vertices', methods=['GET'])
+def grafo_quantidade_vertices():
+    entrada = request.get_json()
+
+    nome = entrada['nome']
+    grafo = Grafo(nome=nome)
+    return make_response(grafo.grafo_numero_vertices())
+
+@routes_bp.route('/grafo/quantidade/arestas', methods=['GET'])
+def grafo_quantidade_arestas():
+    entrada = request.get_json()
+
+    nome = entrada['nome']
+    grafo = Grafo(nome=nome)
+    return make_response(grafo.grafo_numero_arestas())
+    
 
 
 

@@ -7,7 +7,7 @@ import json
 class Grafo():
 
     #Atributos
-    def __init__(self, vertices= [], arestas= {}, nome= ""):
+    def __init__(self, vertices= [], arestas= [], nome= ""):
         self.vertices = vertices
         self.arestas = arestas
         self.nome = nome
@@ -41,7 +41,8 @@ class Grafo():
         #manupilação no csv
         with open('db_grafos.csv','a', newline='', encoding='utf-8') as bd:
 
-            if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+            if os.path.getsize('db_grafos.csv') == 0 : 
+                return jsonify(mensagem = "O csv está vazio!")
             #pesquisa o nome do grafo
             aux = False
             cont = 0
@@ -54,14 +55,17 @@ class Grafo():
             if (aux == False): return jsonify(mensagem = "O grafo não existe!")
 
             #adicionar aresta
-            aresta = json.loads(spamreader.arestas[cont].replace("'","\""))
-            aresta[a] = b
+            #aresta = json.loads(spamreader.arestas[cont].replace("'","\""))
+            aresta = spamreader.arestas[cont].replace("[","").replace("]","").split(",")
+
+            aresta.append({a:b})
+            print(len(aresta))
             spamreader.arestas[cont] = aresta
 
             #adicionar vertice
 
             vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
-            print(vertice, a, b)
+            #print(vertice, a, b)
             if not(a in vertice): vertice.append(a)
             if not(b in vertice): vertice.append(b)
             spamreader.vertices[cont] = vertice
@@ -83,3 +87,79 @@ class Grafo():
         return jsonify(arestas = self.arestas, vertices = self.vertices)
     def remover_aresta(self):
         return jsonify(arestas = self.arestas, vertices = self.vertices)
+    
+    def grafo_numero_vertices(self):
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        #pesquisa o nome do grafo
+        aux = False
+        cont = 0
+        spamreader = pd.read_csv('db_grafos.csv')
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            cont+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
+
+        return jsonify(numVertices=len(vertice))
+    def grafo_numero_arestas(self):
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        #pesquisa o nome do grafo
+        aux = False
+        cont = 0
+        spamreader = pd.read_csv('db_grafos.csv')
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            cont+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        aresta = spamreader.arestas[cont].replace("[","").replace("]","").split(",")
+        return jsonify(numArestas=len(aresta))
+    
+    def representacao_listas_adjacencias(self):
+        return jsonify(arestas = self.arestas, vertices = self.vertices)   
+    def representacao_matrizes_adjacencias(self):
+        return jsonify(arestas = self.arestas, vertices = self.vertices)
+    
+    def grafo_aretas_adjacentes(self, a, b):
+        if os.path.getsize('db_grafos.csv') == 0 : 
+            return jsonify(mensagem = "O csv está vazio!")
+        #pesquisa o nome do grafo
+        aux = False
+        cont = 0
+        spamreader = pd.read_csv('db_grafos.csv')
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            cont+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+
+        #adicionar aresta
+        aresta = spamreader.arestas[cont].replace("[","").replace("]","").replace("\"","").replace(" ","").split(",")
+
+        arestasadjacentes = []
+        print(aresta)
+        aux = False
+        for i in aresta:
+            
+            if str({a:b}).replace(" ","") == i:
+                aux = True
+            temp = json.loads(i.replace("'","\""))
+            
+            if not(str({a:b}).replace(" ","") == i):
+                if a == [*temp.values()][0] or b == [*temp.values()][0]:
+                    arestasadjacentes.append(i)
+                elif a == [*temp][0] or b == [*temp][0]:
+                    arestasadjacentes.append(i)
+
+        if not aux: return jsonify(mensagem = "A aresta não existe!")
+        if len(arestasadjacentes) == 0: return jsonify(mensagem = "Não existe aresta adjacente à ela!")
+        return jsonify(ArestasAdj = arestasadjacentes)
+
+    def grafo_vertices_adjacentes(self):
+        return jsonify(arestas = self.arestas, vertices = self.vertices)
+        
+    
