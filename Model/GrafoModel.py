@@ -47,25 +47,32 @@ class Grafo():
             cont = 0
             spamreader = pd.read_csv('db_grafos.csv')
             for coluna in spamreader.nome:
-                print(self.nome)
                 if(self.nome == coluna):
                     aux = True
                     break
                 cont+=1        
             if (aux == False): return jsonify(mensagem = "O grafo não existe!")
 
+            #adicionar aresta
             aresta = json.loads(spamreader.arestas[cont].replace("'","\""))
             aresta[a] = b
             spamreader.arestas[cont] = aresta
-            
+
+            #adicionar vertice
+
+            vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
+            print(vertice, a, b)
+            if not(a in vertice): vertice.append(a)
+            if not(b in vertice): vertice.append(b)
+            spamreader.vertices[cont] = vertice
+
+
             spamreader.to_csv('db_grafos.csv', index=False)
 
             bd.close()
 
         return jsonify(mensagem = "Aresta adicionada com sucesso!")
-
-
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
+    
     def adicionar_vertice(self):
         return jsonify(arestas = self.arestas, vertices = self.vertices)
     
