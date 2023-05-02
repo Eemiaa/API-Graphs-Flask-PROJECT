@@ -53,9 +53,12 @@ def listas_adjacencias():
     
 @routes_bp.route('/representacaoGrafos/matrizesAdjacencias', methods=['GET'])
 def matrizes_adjacencias():
-    return make_response(
-        {"Hello":"world"}
-    )
+    entrada = request.get_json()
+
+    nome = entrada['nome']
+    grafo = Grafo(nome=nome)
+    return make_response(grafo.representacao_matrizes_adjacencias())
+    
 
 @routes_bp.route('/grafo/adjacentes/arestas', methods=['GET'])
 def grafo_adjacentes_arestas():

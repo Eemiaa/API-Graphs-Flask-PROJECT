@@ -129,7 +129,42 @@ class Grafo():
         return jsonify(arestas = self.arestas, vertices = self.vertices)   
     
     def representacao_matrizes_adjacencias(self):
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
+        if os.path.getsize('db_grafos.csv') == 0 : 
+            return jsonify(mensagem = "O csv está vazio!")
+        #pesquisa o nome do grafo
+        aux = False
+        cont = 0
+        spamreader = pd.read_csv('db_grafos.csv')
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            cont+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        arestas = spamreader.arestas[cont].replace("[","").replace("]","").replace("\"","").replace(" ","").split(",")
+        vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
+
+        dataAdj = []
+        
+
+        for l in vertice:
+            auxcoluna = []
+            for j in range(len(vertice)):
+                auxcoluna.append(0)
+
+            for c in range(len(vertice)):
+                for i in arestas:
+
+                    temp = json.loads(i.replace("'","\""))
+                    #print(str({l:vertice[c]}).replace(" ",""), i, c)
+                    if str({l:vertice[c]}).replace(" ","") == i: 
+                        auxcoluna[c] = 1
+            dataAdj.append(auxcoluna)
+
+        matrizAdj = pd.DataFrame(dataAdj, index = vertice, columns = vertice)
+
+        return jsonify(matrizAdjacência = matrizAdj.to_json(orient="split"))
+    
     def representacao_listas_adjacencias(self):
 
         if os.path.getsize('db_grafos.csv') == 0 : 
@@ -153,18 +188,16 @@ class Grafo():
 
         for v in vertice:
             for a in vertice:
-                if(a != v):
-                    for i in arestas:
+                for i in arestas:
 
-                        temp = json.loads(i.replace("'","\""))
-                        
-                        if str({v:a}).replace(" ","") == i or str({a:v}).replace(" ","") == i: 
-                            listaAdj[v].append(a)
+                    temp = json.loads(i.replace("'","\""))
+                    
+                    if str({v:a}).replace(" ","") == i or str({a:v}).replace(" ","") == i: 
+                        listaAdj[v].append(a)
 
 
         return jsonify(listaAdjacencia = listaAdj)
     
-
     def grafo_aretas_adjacentes(self, a, b):
         if os.path.getsize('db_grafos.csv') == 0 : 
             return jsonify(mensagem = "O csv está vazio!")
