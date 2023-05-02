@@ -153,6 +153,67 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Lista adjacencias",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/representacaoGrafos/matrizesAdjacencias",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"representacaoGrafos",
+						"matrizesAdjacencias"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Grafo adjacencias",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"b\",\n    \"b\":\"d\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/adjacentes/arestas",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"adjacentes",
+						"arestas"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
