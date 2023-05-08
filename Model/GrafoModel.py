@@ -1,8 +1,9 @@
 from flask import jsonify
-import csv
 import os
 import pandas as pd
 import json
+import csv
+import re
 
 class Grafo():
 
@@ -11,7 +12,7 @@ class Grafo():
         self.vertices = vertices
         self.arestas = arestas
         self.nome = nome
-
+        
     #Métodos
     def adicionar_grafo(self):
 
@@ -38,44 +39,42 @@ class Grafo():
                        grafo = [self.nome, self.vertices, self.arestas])
     
     def adicionar_aresta(self, a, b):
-        #manupilação no csv
-        with open('db_grafos.csv','a', newline='', encoding='utf-8') as bd:
 
-            if os.path.getsize('db_grafos.csv') == 0 : 
-                return jsonify(mensagem = "O csv está vazio!")
-            #pesquisa o nome do grafo
-            aux = False
-            cont = 0
-            spamreader = pd.read_csv('db_grafos.csv')
-            for coluna in spamreader.nome:
-                if(self.nome == coluna):
-                    aux = True
-                    break
-                cont+=1        
-            if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        aux = False
+        numLinha = 0
+        #le o banco de dados
+        spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            numLinha+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
 
-            #adicionar aresta
-            #aresta = json.loads(spamreader.arestas[cont].replace("'","\""))
-            aresta = spamreader.arestas[cont].replace("[","").replace("]","").split(",")
+        #pega a lista de aresta correta e trata os dados
+        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        #adiciona a nova aresta na lista
+        aresta.append(str({a:b}).replace(" ",""))
+        #adiciona a nova lista na tabela
+        spamreader.arestas[numLinha] = aresta
+        
 
-            aresta.append({a:b})
-            spamreader.arestas[cont] = aresta
+        #pega a lista de vertice correta e trata os dados
+        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+        #adiciona os vértices caso eles não existam
+        if not(a in vertice): vertice.append(a)
+        if not(b in vertice): vertice.append(b)       
+        #adiciona a nova lista na tabela
+        spamreader.vertices[numLinha] = vertice
+        #confirma as alterações
+        spamreader.to_csv('db_grafos.csv', index=False)
 
-            #adicionar vertice
-
-            vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
-            #print(vertice, a, b)
-            if not(a in vertice): vertice.append(a)
-            if not(b in vertice): vertice.append(b)
-            spamreader.vertices[cont] = vertice
-
-
-            spamreader.to_csv('db_grafos.csv', index=False)
-
-            bd.close()
 
         return jsonify(mensagem = "Aresta adicionada com sucesso!")
-    
+
     def adicionar_vertice(self):
         return jsonify(arestas = self.arestas, vertices = self.vertices)
     
@@ -88,75 +87,76 @@ class Grafo():
         return jsonify(arestas = self.arestas, vertices = self.vertices)
     
     def grafo_numero_vertices(self):
+
+        #verifica se o banco de dados está vazio:
         if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
-        #pesquisa o nome do grafo
         aux = False
-        cont = 0
+        numLinha = 0
+        #le o banco de dados
         spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
         for coluna in spamreader.nome:
             if(self.nome == coluna):
                 aux = True
                 break
-            cont+=1        
+            numLinha+=1        
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
-        vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
+
+        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
 
         return jsonify(numVertices=len(vertice))
+
     def grafo_numero_arestas(self):
+
+        #verifica se o banco de dados está vazio:
         if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
-        #pesquisa o nome do grafo
         aux = False
-        cont = 0
+        numLinha = 0
+        #le o banco de dados
         spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
         for coluna in spamreader.nome:
             if(self.nome == coluna):
                 aux = True
                 break
-            cont+=1        
+            numLinha+=1        
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
-        aresta = spamreader.arestas[cont].replace("[","").replace("]","").split(",")
+
+        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+
         return jsonify(numArestas=len(aresta))
     
-    
-        
-
-
-
-
-
-
-
-        return jsonify(arestas = self.arestas, vertices = self.vertices)   
-    
     def representacao_matrizes_adjacencias(self):
-        if os.path.getsize('db_grafos.csv') == 0 : 
-            return jsonify(mensagem = "O csv está vazio!")
-        #pesquisa o nome do grafo
+
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
         aux = False
-        cont = 0
+        numLinha = 0
+        #le o banco de dados
         spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
         for coluna in spamreader.nome:
             if(self.nome == coluna):
                 aux = True
                 break
-            cont+=1        
+            numLinha+=1        
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
-        arestas = spamreader.arestas[cont].replace("[","").replace("]","").replace("\"","").replace(" ","").split(",")
-        vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
 
+        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+
+        print(aresta)
         dataAdj = []
         
-
         for l in vertice:
             auxcoluna = []
             for j in range(len(vertice)):
                 auxcoluna.append(0)
 
             for c in range(len(vertice)):
-                for i in arestas:
+                for i in aresta:
 
                     temp = json.loads(i.replace("'","\""))
-                    #print(str({l:vertice[c]}).replace(" ",""), i, c)
                     if str({l:vertice[c]}).replace(" ","") == i: 
                         auxcoluna[c] = 1
             dataAdj.append(auxcoluna)
@@ -167,20 +167,22 @@ class Grafo():
     
     def representacao_listas_adjacencias(self):
 
-        if os.path.getsize('db_grafos.csv') == 0 : 
-            return jsonify(mensagem = "O csv está vazio!")
-        #pesquisa o nome do grafo
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
         aux = False
-        cont = 0
+        numLinha = 0
+        #le o banco de dados
         spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
         for coluna in spamreader.nome:
             if(self.nome == coluna):
                 aux = True
                 break
-            cont+=1        
+            numLinha+=1        
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
-        arestas = spamreader.arestas[cont].replace("[","").replace("]","").replace("\"","").replace(" ","").split(",")
-        vertice = spamreader.vertices[cont].replace("[","").replace("]","").replace("'","").replace(" ","").split(",")
+
+        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
 
         listaAdj = {}
         for i in vertice:
@@ -188,33 +190,33 @@ class Grafo():
 
         for v in vertice:
             for a in vertice:
-                for i in arestas:
+                for i in aresta:
 
                     temp = json.loads(i.replace("'","\""))
                     
                     if str({v:a}).replace(" ","") == i or str({a:v}).replace(" ","") == i: 
                         listaAdj[v].append(a)
 
-
         return jsonify(listaAdjacencia = listaAdj)
     
     def grafo_aretas_adjacentes(self, a, b):
-        if os.path.getsize('db_grafos.csv') == 0 : 
-            return jsonify(mensagem = "O csv está vazio!")
-        #pesquisa o nome do grafo
+
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
         aux = False
-        cont = 0
+        numLinha = 0
+        #le o banco de dados
         spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
         for coluna in spamreader.nome:
             if(self.nome == coluna):
                 aux = True
                 break
-            cont+=1        
+            numLinha+=1        
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
 
         #adicionar aresta
-        aresta = spamreader.arestas[cont].replace("[","").replace("]","").replace("\"","").replace(" ","").split(",")
-
+        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         arestasadjacentes = []
         aux = False
         for i in aresta:
@@ -236,5 +238,41 @@ class Grafo():
     def grafo_vertices_adjacentes(self):
         return jsonify(arestas = self.arestas, vertices = self.vertices)
 
-       
+    def DFS(self):
+        
+        if os.path.getsize('db_grafos.csv') == 0 : 
+            return jsonify(mensagem = "O csv está vazio!")
+        #pesquisa o nome do grafo
+        aux = False
+        cont = 0
+        spamreader = pd.read_csv('db_grafos.csv')
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            cont+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+
+
+        print(vertices)
+
+        #arvore = {}
+        #arvore['v'] = vertice(, '2', '2')
+        #arvore['v'].cor = "branco"
+        #print(json.dumps(arvore['v'].__dict__))
+        return jsonify(arestas = self.arestas, vertices = self.vertices)
+
+
+
+
+class vertice():
+    def __init__(self, antecessor=str, d=str, f=str, cor =str):
+        self.antecessor = antecessor
+        self.d = d
+        self.f = f
+        self.cor = cor
+
+
     
