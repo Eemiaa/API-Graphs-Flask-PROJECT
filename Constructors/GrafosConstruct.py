@@ -2,8 +2,9 @@ from flask import jsonify
 import os
 import pandas as pd
 import json
-import csv
 import re
+import csv
+from Models.BaseModels import vertice
 
 class Grafo():
 
@@ -15,15 +16,12 @@ class Grafo():
         
     #Métodos
     def adicionar_grafo(self):
-
-        #manupilação no csv
+        #verifica se o banco de dados está vazio:
         with open('db_grafos.csv','a', newline='', encoding='utf-8') as bd:
             
             #objeto de gravação
             spamwriter = csv.writer(bd, delimiter=',')
-
             if os.path.getsize('db_grafos.csv') != 0 :
-
                 spamreader = pd.read_csv('db_grafos.csv')
                 print(spamreader)
                 for coluna in spamreader.nome:
@@ -240,23 +238,24 @@ class Grafo():
 
     def DFS(self):
         
-        if os.path.getsize('db_grafos.csv') == 0 : 
-            return jsonify(mensagem = "O csv está vazio!")
-        #pesquisa o nome do grafo
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
         aux = False
-        cont = 0
+        numLinha = 0
+        #le o banco de dados
         spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
         for coluna in spamreader.nome:
             if(self.nome == coluna):
                 aux = True
                 break
-            cont+=1        
+            numLinha+=1        
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
 
 
-        print(vertices)
+
 
         #arvore = {}
         #arvore['v'] = vertice(, '2', '2')
@@ -267,12 +266,7 @@ class Grafo():
 
 
 
-class vertice():
-    def __init__(self, antecessor=str, d=str, f=str, cor =str):
-        self.antecessor = antecessor
-        self.d = d
-        self.f = f
-        self.cor = cor
+
 
 
     

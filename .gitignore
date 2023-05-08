@@ -1,2 +1,2 @@
-.meuAmbiente/
-.minhaVenv/
+minhaVenv/
+__pycache__/

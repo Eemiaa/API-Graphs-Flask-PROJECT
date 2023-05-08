@@ -1,5 +1,5 @@
 from flask import make_response, Blueprint, request
-from Model.GrafoModel import Grafo
+from Constructors.GrafosConstruct import Grafo
 
 routes_bp = Blueprint('Routes',__name__)
 
