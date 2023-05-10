@@ -275,12 +275,12 @@ class Grafo():
 
 
         arvore[inicial].antecessor=None
-        arvore[inicial].d=tempo
+        arvore[inicial].d=int(tempo)
         
         for u in vertice:
             if arvore[u].cor == "B":
                 DFS_VISIT(arvore, u, tempo)
-
+            
         resposta = {}
         for vrt in vertice:
             resposta[vrt] = json.dumps(arvore[vrt].__dict__)
