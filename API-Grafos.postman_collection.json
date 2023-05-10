@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"vertices\":[\"a\",\"b\"],\n    \"arestas\": [{\"a\":\"b\"}]\n}",
+					"raw": "{\n    \"nome\":\"B\",\n    \"vertices\":[\"a\",\"b\",\"c\"],\n    \"arestas\": [{\"a\":\"b\"},{\"b\":\"c\"},{\"a\":\"c\"}]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -133,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"b\",\n    \"b\":\"d\"\n}",
+					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"b\",\n    \"b\":\"b\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -155,7 +155,7 @@
 			"response": []
 		},
 		{
-			"name": "Lista adjacencias",
+			"name": "matriz adjacencias",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -185,7 +185,7 @@
 			"response": []
 		},
 		{
-			"name": "Grafo adjacencias",
+			"name": "listas adjacencias",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -194,7 +194,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"b\",\n    \"b\":\"d\"\n}",
+					"raw": "{\n    \"nome\":\"C\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -202,14 +202,44 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/grafo/adjacentes/arestas",
+					"raw": "{{URL}}/representacaoGrafos/listasAdjacencias",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"representacaoGrafos",
+						"listasAdjacencias"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DFS",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"inicial\":\"a\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/busca/DFS",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"grafo",
-						"adjacentes",
-						"arestas"
+						"busca",
+						"DFS"
 					]
 				}
 			},
