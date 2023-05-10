@@ -4,7 +4,7 @@ import pandas as pd
 import json
 import re
 import csv
-from Models.BaseModels import vertice
+from Models.BaseModels import Vertice, DFS_VISIT
 
 class Grafo():
 
@@ -235,8 +235,9 @@ class Grafo():
 
     def grafo_vertices_adjacentes(self):
         return jsonify(arestas = self.arestas, vertices = self.vertices)
+    
 
-    def DFS(self):
+    def DFS(self, inicial):
         
         #verifica se o banco de dados está vazio:
         if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
@@ -253,15 +254,38 @@ class Grafo():
         if (aux == False): return jsonify(mensagem = "O grafo não existe!")
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+        if inicial not in vertice: return jsonify(mensagem = "Essa aresta não existe no mapa.")
+        
+        tempo = 0
+        arvore = {}
+        art1 = []
+        art2 = []
+        
+        for art in aresta:
+            aux = re.sub("|{|}|'","", art).split(":")
+            art1.append(aux[0])
+            art2.append(aux[1])
+
+        for u in vertice:
+            arvore[u] = Vertice(cor="B", adj = [])
+
+            for adjs in range(len(art1)):
+                if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
+                elif u == art2[adjs]: arvore[u].adj.append(art1[adjs])
 
 
+        arvore[inicial].antecessor=None
+        arvore[inicial].d=tempo
+        
+        for u in vertice:
+            if arvore[u].cor == "B":
+                DFS_VISIT(arvore, u, tempo)
 
+        resposta = {}
+        for vrt in vertice:
+            resposta[vrt] = json.dumps(arvore[vrt].__dict__)
 
-        #arvore = {}
-        #arvore['v'] = vertice(, '2', '2')
-        #arvore['v'].cor = "branco"
-        #print(json.dumps(arvore['v'].__dict__))
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
+        return resposta
 
 
 

@@ -94,9 +94,9 @@ def grafo_quantidade_arestas():
 @routes_bp.route('/grafo/busca/DFS',methods=['GET'])
 def dfs_alg():
     entrada = request.get_json()
-    nome = entrada['nome']
+    nome, inicial = entrada['nome'], entrada['inicial']
     grafo = Grafo(nome=nome)
-    return make_response(grafo.DFS())
+    return make_response(grafo.DFS(inicial))
 
 
 
