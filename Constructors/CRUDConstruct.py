@@ -21,7 +21,6 @@ class Grafo():
             spamwriter = csv.writer(bd, delimiter=',')
             if os.path.getsize('db_grafos.csv') != 0 :
                 spamreader = pd.read_csv('db_grafos.csv')
-                print(spamreader)
                 for coluna in spamreader.nome:
                     if(self.nome == coluna):
                        return jsonify(mensagem = "O grafo já existe!")
@@ -31,7 +30,7 @@ class Grafo():
             spamwriter.writerow([self.nome, self.vertices, self.arestas])
             bd.close()
 
-        return "Grafo adicionado com sucesso!", [self.nome, self.vertices, self.arestas]
+        return jsonify(mensagem ="Grafo adicionado com sucesso!", grafo = [self.nome, self.vertices, self.arestas])
     
     def adicionar_aresta(self, a, b):
 
@@ -68,7 +67,7 @@ class Grafo():
         spamreader.to_csv('db_grafos.csv', index=False)
 
 
-        return "Aresta adicionada com sucesso!"
+        return jsonify(mensagem = "Aresta adicionada com sucesso!")
 
     def adicionar_vertice(self):
         return jsonify(arestas = self.arestas, vertices = self.vertices)

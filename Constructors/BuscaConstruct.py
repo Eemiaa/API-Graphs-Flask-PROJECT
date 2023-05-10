@@ -7,8 +7,8 @@ from Constructors.CRUDConstruct import Grafo
 from Models.BaseModels import Vertice
 
 class Buscas():
-    def __init__(self):
-        Grafo.__init__()
+    def __init__(self, nome=str):
+        Grafo.__init__(self, nome=nome)
         
     def DFS_VISIT(self, arvore, u, tempo):
         arvore[u].cor = "C"
@@ -72,6 +72,6 @@ class Buscas():
         for vrt in vertice:
             resposta[vrt] = json.dumps(arvore[vrt].__dict__)
 
-        return resposta
+        return jsonify( DFS = resposta)
 
 

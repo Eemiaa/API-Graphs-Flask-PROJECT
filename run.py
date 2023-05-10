@@ -1,4 +1,4 @@
-from flask import Flask, make_response
+from flask import Flask
 from Routes.routes import routes_bp
 
 app = Flask(__name__)

@@ -1,14 +1,13 @@
 import json
 import os
 import re
-from turtle import pd
-
+import pandas as pd
 from flask import jsonify
 from Constructors.CRUDConstruct import Grafo
 
 class Representacoes():
-    def __init__(self):
-        Grafo.__init__()
+    def __init__(self, nome=str):
+        Grafo.__init__(self, nome=nome)
 
     def grafo_numero_vertices(self):
 
@@ -28,7 +27,7 @@ class Representacoes():
 
         vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
 
-        return len(vertice)
+        return jsonify(quantidadeVertices = len(vertice))
 
     def grafo_numero_arestas(self):
 
@@ -48,7 +47,7 @@ class Representacoes():
 
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
 
-        return len(aresta)
+        return jsonify(quantidadeArestas = len(aresta))
     
     def representacao_matrizes_adjacencias(self):
 
@@ -87,7 +86,7 @@ class Representacoes():
 
         matrizAdj = pd.DataFrame(dataAdj, index = vertice, columns = vertice)
 
-        return matrizAdj.to_json(orient="split")
+        return jsonify( matrizAdjacencia = matrizAdj.to_json(orient="split"))
     
     def representacao_listas_adjacencias(self):
 
@@ -121,7 +120,7 @@ class Representacoes():
                     if str({v:a}).replace(" ","") == i or str({a:v}).replace(" ","") == i: 
                         listaAdj[v].append(a)
 
-        return listaAdj
+        return jsonify( listaAdjacencia = listaAdj)
     
     def grafo_aretas_adjacentes(self, a, b):
 
@@ -158,7 +157,4 @@ class Representacoes():
         if not aux: return jsonify(mensagem = "A aresta não existe!")
         if len(arestasadjacentes) == 0: return jsonify(mensagem = "Não existe aresta adjacente à ela!")
         
-        return arestasadjacentes
-
-    def grafo_vertices_adjacentes(self):
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
+        return jsonify(arestasAdjacentes = arestasadjacentes)
