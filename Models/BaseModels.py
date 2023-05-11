@@ -1,6 +1,6 @@
 
 class Vertice():
-    def __init__(self, antecessor=str, d=str, f=str, cor =str, adj=[]):
+    def __init__(self, antecessor="", d="", f="", cor ="", adj=[]):
         self.antecessor = antecessor
         self.d = d
         self.f = f

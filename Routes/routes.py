@@ -66,9 +66,6 @@ def grafo_quantidade_arestas():
     grafo = Representacoes(nome=nome)
     return make_response(grafo.grafo_numero_arestas())
 
-
-
-
 @routes_bp.route('/grafo/busca/DFS',methods=['GET'])
 def dfs_alg():
     entrada = request.get_json()
@@ -76,6 +73,12 @@ def dfs_alg():
     grafo = Buscas(nome=nome)
     return make_response(grafo.DFS(inicial))
 
+@routes_bp.route('/grafo/busca/BFS',methods=['GET'])
+def bfs_alg():
+    entrada = request.get_json()
+    nome, inicial = entrada['nome'], entrada['inicial']
+    grafo = Buscas(nome=nome)
+    return make_response(grafo.BFS(inicial))
 
 
 

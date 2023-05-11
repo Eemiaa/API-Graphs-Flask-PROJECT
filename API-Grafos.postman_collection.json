@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cc7933ef-1ab8-47d1-8762-1133702815b9",
+		"_postman_id": "cbf38aa1-2833-4969-b2af-8b7faec2d81e",
 		"name": "API-Grafos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23054247"
@@ -71,7 +71,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\n    \"b\":\n}",
+					"raw": "{\n    \"nome\":\"C\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -133,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"b\",\n    \"b\":\"b\"\n}",
+					"raw": "{\n    \"nome\":\"C\",\n    \"a\":\"a\",\n    \"b\":\"b\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -240,6 +240,37 @@
 						"grafo",
 						"busca",
 						"DFS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BFS",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"C\",\n    \"inicial\":\"a\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/busca/BFS",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"busca",
+						"BFS"
 					]
 				}
 			},
