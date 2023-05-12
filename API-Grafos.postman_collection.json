@@ -224,7 +224,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"inicial\":\"a\"\n}",
+					"raw": "{\n    \"nome\":\"C\",\n    \"tipo\":\"não orientado\",\n    \"inicial\":\"a\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -255,7 +255,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"B\",\n    \"tipo\":\"nao orientado\",\n    \"inicial\":\"a\"\n}",
+					"raw": "{\n    \"nome\":\"B\",\n    \"tipo\":\"orientado\",\n    \"inicial\":\"a\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
