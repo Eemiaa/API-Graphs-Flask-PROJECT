@@ -25,7 +25,7 @@ class Buscas():
         tempo += 1
         return tempo
     
-    def iniciar_arvore(self, aresta, vertice, tipo, inicial=str):
+    def iniciar_arvore(self, aresta, vertice, algoritmo, inicial=str, tipo='orientado'):
         arvore = {}
         art1 = []
         art2 = []
@@ -35,28 +35,35 @@ class Buscas():
             art1.append(aux[0])
             art2.append(aux[1])
 
-        if tipo == 'DFS':
+        if algoritmo == 'DFS':
             for u in vertice:
                 arvore[u] = Vertice(cor="B", adj = [])
-
-                for adjs in range(len(art1)):
-                    if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
-                    elif u == art2[adjs]: arvore[u].adj.append(art1[adjs])
-
-        elif tipo == 'BFS':
+                if tipo == 'orientado':
+                    for adjs in range(len(art1)):
+                        if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
+                else:
+                    for adjs in range(len(art1)):
+                        if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
+                        elif u == art2[adjs]: arvore[u].adj.append(art1[adjs])
+                    
+                        
+        elif algoritmo == 'BFS':
             for u in vertice:
                 if u != inicial:
                     arvore[u] = Vertice(cor="B", adj = [], d = math.inf, antecessor=None)
                 else:
                     arvore[u] = Vertice(cor="C", adj = [], d = 0, antecessor=None)
-
-                for adjs in range(len(art1)):
-                    if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
-                    elif u == art2[adjs]: arvore[u].adj.append(art1[adjs])
-                
+                if tipo == 'orientado':
+                    for adjs in range(len(art1)):
+                        if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
+                else:
+                    for adjs in range(len(art1)):
+                        if u == art1[adjs]: arvore[u].adj.append(art2[adjs])
+                        elif u == art2[adjs]: arvore[u].adj.append(art1[adjs])
+                    
         return arvore
 
-    def DFS(self, inicial):
+    def DFS(self, inicial, tipo):
         
         #verifica se o banco de dados está vazio:
         if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
@@ -76,7 +83,7 @@ class Buscas():
         if inicial not in vertice: return jsonify(mensagem = "Essa aresta não existe no mapa.")
         
         tempo = 0
-        arvore = self.iniciar_arvore(aresta, vertice, 'DFS')
+        arvore = self.iniciar_arvore(aresta, vertice, 'DFS', tipo=tipo)
         
         arvore[inicial].antecessor=None
         arvore[inicial].d=int(tempo)
@@ -91,7 +98,7 @@ class Buscas():
 
         return jsonify( DFS = resposta)
     
-    def BFS(self, inicial):
+    def BFS(self, inicial, tipo):
         #verifica se o banco de dados está vazio:
         if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
         aux = False
@@ -110,7 +117,7 @@ class Buscas():
         if inicial not in vertice: return jsonify(mensagem = "Essa aresta não existe no mapa.")
 
         tempo = 0
-        arvore = self.iniciar_arvore(aresta, vertice, 'BFS', inicial)
+        arvore = self.iniciar_arvore(aresta, vertice, 'BFS', inicial, tipo=tipo)
         Q = []
         Q.append(inicial)
         

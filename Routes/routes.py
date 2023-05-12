@@ -76,9 +76,9 @@ def dfs_alg():
 @routes_bp.route('/grafo/busca/BFS',methods=['GET'])
 def bfs_alg():
     entrada = request.get_json()
-    nome, inicial = entrada['nome'], entrada['inicial']
+    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
     grafo = Buscas(nome=nome)
-    return make_response(grafo.BFS(inicial))
+    return make_response(grafo.BFS(inicial, tipo))
 
 
 
