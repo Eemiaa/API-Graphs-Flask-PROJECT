@@ -23,9 +23,6 @@ def grafo_adicionar_aresta():
     grafos = Grafo(nome=nome)
     return make_response(grafos.adicionar_aresta(a, b))
 
-
-
-
 @routes_bp.route('/representacaoGrafos/listasAdjacencias', methods=['GET'])
 def listas_adjacencias():
     entrada = request.get_json()

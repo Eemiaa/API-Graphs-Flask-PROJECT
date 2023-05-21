@@ -138,8 +138,3 @@ class Buscas():
 
         return jsonify( DFS = resposta)
 
-
-
-
-
-
