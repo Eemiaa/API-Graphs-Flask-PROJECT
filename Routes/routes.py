@@ -1,5 +1,6 @@
 from flask import jsonify, make_response, Blueprint, request
 from Constructors.CRUDConstruct import Grafo
+from Constructors.CaminhosConstruct import Caminhos
 from Constructors.RepresentacaoConstruct import Representacoes
 from Constructors.BuscaConstruct import Buscas
 
@@ -79,8 +80,30 @@ def bfs_alg():
 
 
 
+@routes_bp.route('/grafo/caminhos/Dijkstra',methods=['GET'])
+def bfs_alg():
+    entrada = request.get_json()
+    nome, inicial, tipo, pesos = entrada['nome'], entrada['inicial'], entrada['tipo'], entrada['pesos']
+    grafo = Caminhos(nome=nome)
+    return make_response(grafo.Dijkstra(inicial, pesos, tipo))
 
+@routes_bp.route('/grafo/caminhos/Bellman_Ford',methods=['GET'])
+def bfs_alg():
+    entrada = request.get_json()
+    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    grafo = Caminhos(nome=nome)
+    return make_response(grafo.Bellman_Ford(inicial, tipo))
 
+@routes_bp.route('/grafo/caminhos/Floyd_Warshall',methods=['GET'])
+def bfs_alg():
+    entrada = request.get_json()
+    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    grafo = Caminhos(nome=nome)
+    return make_response(grafo.Floyd_Warshall(inicial, tipo))
 
-
-
+@routes_bp.route('/grafo/caminhos/Componentes_Conexos',methods=['GET'])
+def bfs_alg():
+    entrada = request.get_json()
+    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    grafo = Caminhos(nome=nome)
+    return make_response(grafo.Componentes_ConexosSS(inicial, tipo))

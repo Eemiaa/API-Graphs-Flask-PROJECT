@@ -6,3 +6,5 @@ class Vertice():
         self.f = f
         self.cor = cor
         self.adj = adj
+
+#ele vai ter q fornecer o peso das arestas em ordem 
