@@ -83,9 +83,9 @@ def bfs_alg():
 @routes_bp.route('/grafo/caminhos/Dijkstra',methods=['GET'])
 def dijkstra_alg():
     entrada = request.get_json()
-    nome, inicial, tipo, pesos = entrada['nome'], entrada['inicial'], entrada['tipo'], entrada['pesos']
+    nome, inicial,pesos = entrada['nome'], entrada['inicial'], entrada['pesos']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Dijkstra(inicial, pesos, tipo))
+    return make_response(grafo.Dijkstra(inicial, pesos))
 
 @routes_bp.route('/grafo/caminhos/Bellman_Ford',methods=['GET'])
 def bellman_ford_alg():
