@@ -49,6 +49,27 @@ class Caminhos():
             peso[self.arestas[i]] = pesos[i]
         return peso
 
+    def matriz_peso(self, peso, aresta, vertice):
+
+        dataAdj = []
+
+        for l in vertice:
+            auxcoluna = []
+            for j in range(len(vertice)):
+                auxcoluna.append(0)
+
+            for c in range(len(vertice)):
+                for i in aresta:
+
+                    temp = json.loads(i.replace("'","\""))
+                    if str({l:vertice[c]}).replace(" ","") == i: 
+                        auxcoluna[c] = peso[str({l:vertice[c]}).replace(" ","")]
+            dataAdj.append(auxcoluna)
+
+        matrizAdj = pd.DataFrame(dataAdj, index = vertice, columns = vertice)
+
+        return matrizAdj
+
     def Dijkstra(self, v_inicial, pesos):
         
         #verifica se o banco de dados está vazio:
@@ -131,7 +152,46 @@ class Caminhos():
         return jsonify(arvore = resposta, msg = "Não existe um ciclo negativo.")
     
     def Floyd_Warshall(self, v_inicial, pesos):
-        return jsonify(msg = 'ok')
+
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        aux = False
+        numLinha = 0
+        #le o banco de dados
+        spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            numLinha+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+
+        self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+        
+        #print(len(self.arestas))
+        if len(pesos) != len(self.arestas):
+            return jsonify(mensagem = "A quantidade de pesos não correspondem com a quantidade de arestas.")
+        #inicia os pesos
+        peso = self.iniciando_peso(pesos)
+
+        #inicia a matriz de pesos
+        matriz_peso = self.matriz_peso(peso, self.arestas, self.vertices)
+
+        #algoritmo em si
+        antecessores = {}
+        for k in range(len(self.vertices)):
+            for v in range(len(self.vertices)):
+                for w in range(len(self.vertices)):
+
+                    if matriz_peso.loc[self.vertices[v] , self.vertices[k]] + matriz_peso.loc[self.vertices[k], self.vertices[w]] < matriz_peso.loc[self.vertices[v], self.vertices[w]]:
+                        matriz_peso.loc[self.vertices[v] , self.vertices[w]] = matriz_peso.loc[self.vertices[v], self.vertices[k]] + matriz_peso.loc[self.vertices[k], self.vertices[w]]
+                        antecessores[self.vertices[v]] = self.vertices[k]
+
+        return jsonify(matriz_peso = matriz_peso.to_json(orient="split"), lista_antecessores = antecessores)
+        
+    
     
     def Componentes_Conexos(self, v_inicial, pesos):
         return jsonify(msg = 'ok')

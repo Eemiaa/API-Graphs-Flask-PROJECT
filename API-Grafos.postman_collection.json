@@ -325,14 +325,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}/grafo/caminhos/Bellman_Ford",
+					"raw": "{{URL}}/grafo/caminhos/Floyd_Warshall",
 					"host": [
 						"{{URL}}"
 					],
 					"path": [
 						"grafo",
 						"caminhos",
-						"Bellman_Ford"
+						"Floyd_Warshall"
 					]
 				}
 			},
