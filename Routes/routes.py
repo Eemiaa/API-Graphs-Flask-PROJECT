@@ -81,29 +81,29 @@ def bfs_alg():
 
 
 @routes_bp.route('/grafo/caminhos/Dijkstra',methods=['GET'])
-def bfs_alg():
+def dijkstra_alg():
     entrada = request.get_json()
     nome, inicial, tipo, pesos = entrada['nome'], entrada['inicial'], entrada['tipo'], entrada['pesos']
     grafo = Caminhos(nome=nome)
     return make_response(grafo.Dijkstra(inicial, pesos, tipo))
 
 @routes_bp.route('/grafo/caminhos/Bellman_Ford',methods=['GET'])
-def bfs_alg():
+def bellman_ford_alg():
     entrada = request.get_json()
     nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Bellman_Ford(inicial, tipo))
+    return make_response(grafo.Bellman_Ford())
 
 @routes_bp.route('/grafo/caminhos/Floyd_Warshall',methods=['GET'])
-def bfs_alg():
+def floyd_warshall_alg():
     entrada = request.get_json()
     nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Floyd_Warshall(inicial, tipo))
+    return make_response(grafo.Floyd_Warshall())
 
 @routes_bp.route('/grafo/caminhos/Componentes_Conexos',methods=['GET'])
-def bfs_alg():
+def componentes_conexos_alg():
     entrada = request.get_json()
     nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Componentes_ConexosSS(inicial, tipo))
+    return make_response(grafo.Componentes_Conexos())
