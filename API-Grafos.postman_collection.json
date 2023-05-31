@@ -306,6 +306,37 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Bellman_Ford",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"B\",\n    \"inicial\":\"a\",\n    \"pesos\":[1, 2, 3]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/caminhos/Bellman_Ford",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"caminhos",
+						"Bellman_Ford"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

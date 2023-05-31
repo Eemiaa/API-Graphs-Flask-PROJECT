@@ -90,20 +90,20 @@ def dijkstra_alg():
 @routes_bp.route('/grafo/caminhos/Bellman_Ford',methods=['GET'])
 def bellman_ford_alg():
     entrada = request.get_json()
-    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    nome, inicial, pesos = entrada['nome'], entrada['inicial'], entrada['pesos']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Bellman_Ford())
+    return make_response(grafo.Bellman_Ford(inicial, pesos))
 
 @routes_bp.route('/grafo/caminhos/Floyd_Warshall',methods=['GET'])
 def floyd_warshall_alg():
     entrada = request.get_json()
-    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    nome, inicial, pesos= entrada['nome'], entrada['inicial'], entrada['pesos']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Floyd_Warshall())
+    return make_response(grafo.Floyd_Warshall(inicial, pesos))
 
 @routes_bp.route('/grafo/caminhos/Componentes_Conexos',methods=['GET'])
 def componentes_conexos_alg():
     entrada = request.get_json()
-    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    nome, inicial, pesos = entrada['nome'], entrada['inicial'], entrada['pesos']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Componentes_Conexos())
+    return make_response(grafo.Componentes_Conexos(inicial, pesos))
