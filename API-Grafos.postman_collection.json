@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"B\",\n    \"vertices\":[\"a\",\"b\",\"c\"],\n    \"arestas\": [{\"a\":\"b\"},{\"b\":\"c\"},{\"a\":\"c\"}]\n}",
+					"raw": "{\n    \"nome\":\"J\",\n    \"vertices\":[\"a\",\"b\",\"c\"],\n    \"arestas\": [{\"a\":\"b\"},{\"b\":\"c\"},{\"a\":\"c\"}]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -271,6 +271,37 @@
 						"grafo",
 						"busca",
 						"BFS"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Dijkstra",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"B\",\n    \"inicial\":\"a\",\n    \"pesos\":[1, 2, 3]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/caminhos/Dijkstra",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"caminhos",
+						"Dijkstra"
 					]
 				}
 			},
