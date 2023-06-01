@@ -15,7 +15,7 @@ class Caminhos():
     def __init__(self, nome=str):
         Grafo.__init__(self, nome=nome)
         
-    def iniciar_arvore(self, v_inicial):
+    def iniciar_arvore(self, v_inicial=None):
         arvore = {}
         art1 = []
         art2 = []
@@ -25,15 +25,20 @@ class Caminhos():
             art1.append(aux[0])
             art2.append(aux[1])
         
-        for v in self.vertices:
-            if v != v_inicial:
-                arvore[v] = Vertice(d=inf, antecessor=None, adj = [])
-            else:
-                arvore[v] = Vertice(d=0, adj = [])
+        if v_inicial is not None:
+            for v in self.vertices:
+                if v != v_inicial:
+                    arvore[v] = Vertice(d=inf, antecessor=None, adj = [])
+                else:
+                    arvore[v] = Vertice(d=0, adj = [])
 
+                for adjs in range(len(art1)):
+                    if v == art1[adjs]:arvore[v].adj.append(art2[adjs])
+        else:
+            for v in self.vertices:
+                arvore[v] = Vertice(adj = [], cor = "B")
             for adjs in range(len(art1)):
                 if v == art1[adjs]:arvore[v].adj.append(art2[adjs])
-        
         return arvore
 
     def relax(sef, peso, arvore, v_meio, v_final):
@@ -151,7 +156,7 @@ class Caminhos():
     
         return jsonify(arvore = resposta, msg = "Não existe um ciclo negativo.")
     
-    def Floyd_Warshall(self, v_inicial, pesos):
+    def Floyd_Warshall(self, pesos):
 
         #verifica se o banco de dados está vazio:
         if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
@@ -191,7 +196,63 @@ class Caminhos():
 
         return jsonify(matriz_peso = matriz_peso.to_json(orient="split"), lista_antecessores = antecessores)
         
+    def Componentes_Conexos(self):
+
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        aux = False
+        numLinha = 0
+        #le o banco de dados
+        spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            numLinha+=1        
+        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+
+        self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+
+        componentes = {}
+        arvore = self.iniciar_arvore()
+        id = 0
+
+        for i in self.vertices:
+            if(arvore[i].cor == "B"):
+                componentes[id] = []
+                self.DFS(inicial=i, arvore = arvore, componentes=componentes[id])
+        return jsonify(Componentes_Conectados = componentes )
+                
+    def DFS_VISIT(self, arvore, u, tempo, componentes):
+        arvore[u].cor = "C"
+        arvore[u].d = int(tempo)
+        tempo += 1
+        for v in arvore[u].adj:
+            if arvore[v].cor == "B":
+                print(arvore[v])
+                arvore[v].antecessor = u
+                tempo = self.DFS_VISIT(arvore, v, tempo)
+
+        arvore[u].cor = "P"
+        componentes.append(u)
+        arvore[u].f = int(tempo)
+        tempo += 1
+        return tempo
     
-    
-    def Componentes_Conexos(self, v_inicial, pesos):
-        return jsonify(msg = 'ok')
+    def DFS(self, inicial, arvore, componentes=[]):
+        tempo = 0
+        
+        arvore[inicial].antecessor=None
+        arvore[inicial].d=int(tempo)
+        
+        for u in self.vertices:
+            if arvore[u].cor == "B":
+                self.DFS_VISIT(arvore, u, tempo, componentes)
+            
+        resposta = {}
+        for vrt in arvore.keys():
+            resposta[vrt] = json.dumps(arvore[vrt].__dict__)
+
+        

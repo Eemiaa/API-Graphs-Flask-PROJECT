@@ -69,14 +69,15 @@ def dfs_alg():
     entrada = request.get_json()
     nome, inicial = entrada['nome'], entrada['inicial']
     grafo = Buscas(nome=nome)
-    return make_response(grafo.DFS(inicial))
+    retorno, default, default = grafo.DFS(inicial)
+    return make_response(retorno)
 
 @routes_bp.route('/grafo/busca/BFS',methods=['GET'])
 def bfs_alg():
     entrada = request.get_json()
-    nome, inicial, tipo = entrada['nome'], entrada['inicial'], entrada['tipo']
+    nome, inicial = entrada['nome'], entrada['inicial']
     grafo = Buscas(nome=nome)
-    return make_response(grafo.BFS(inicial, tipo))
+    return make_response(grafo.BFS(inicial))
 
 
 
@@ -97,13 +98,13 @@ def bellman_ford_alg():
 @routes_bp.route('/grafo/caminhos/Floyd_Warshall',methods=['GET'])
 def floyd_warshall_alg():
     entrada = request.get_json()
-    nome, inicial, pesos= entrada['nome'], entrada['inicial'], entrada['pesos']
+    nome, pesos= entrada['nome'], entrada['pesos']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Floyd_Warshall(inicial, pesos))
+    return make_response(grafo.Floyd_Warshall(pesos))
 
 @routes_bp.route('/grafo/caminhos/Componentes_Conexos',methods=['GET'])
 def componentes_conexos_alg():
     entrada = request.get_json()
-    nome, inicial, pesos = entrada['nome'], entrada['inicial'], entrada['pesos']
+    nome = entrada['nome']
     grafo = Caminhos(nome=nome)
-    return make_response(grafo.Componentes_Conexos(inicial, pesos))
+    return make_response(grafo.Componentes_Conexos())
