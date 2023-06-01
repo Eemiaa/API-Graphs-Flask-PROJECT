@@ -224,7 +224,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"C\",\n    \"tipo\":\"não orientado\",\n    \"inicial\":\"a\"\n}",
+					"raw": "{\n    \"nome\":\"C\",\n    \"inicial\":\"a\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -255,7 +255,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"B\",\n    \"tipo\":\"orientado\",\n    \"inicial\":\"a\"\n}",
+					"raw": "{\n    \"nome\":\"B\",\n    \"inicial\":\"a\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -317,7 +317,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"nome\":\"B\",\n    \"inicial\":\"a\",\n    \"pesos\":[1, 2, 3]\n}",
+					"raw": "{\n    \"nome\":\"B\",\n    \"pesos\":[1, 2, 3]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -333,6 +333,37 @@
 						"grafo",
 						"caminhos",
 						"Floyd_Warshall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bellman_Ford Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"B\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/caminhos/Componentes_Conexos",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"caminhos",
+						"Componentes_Conexos"
 					]
 				}
 			},
