@@ -2,7 +2,6 @@ import json
 import os
 import re
 import math
-from flask import jsonify
 import pandas as pd
 from Constructors.CRUDConstruct import Grafo
 from Models.BaseModels import Vertice
@@ -11,7 +10,7 @@ class Buscas():
     def __init__(self, nome=str):
         Grafo.__init__(self, nome=nome)
         
-    def DFS_VISIT(self, arvore, u, tempo, componentes):
+    def DFS_VISIT(self, arvore, u, tempo):
         arvore[u].cor = "C"
         arvore[u].d = int(tempo)
         tempo += 1
@@ -21,29 +20,28 @@ class Buscas():
                 tempo = self.DFS_VISIT(arvore, v, tempo)
 
         arvore[u].cor = "P"
-        componentes.append(u)
         arvore[u].f = int(tempo)
         tempo += 1
         return tempo
     
-    def iniciar_arvore(self, aresta, vertice, algoritmo, inicial=str):
+    def iniciar_arvore(self, arestas, vertices, algoritmo='BFS', inicial=str):
         arvore = {}
         art1 = []
         art2 = []
         
-        for art in aresta:
+        for art in arestas:
             aux = re.sub("|{|}|'","", art).split(":")
             art1.append(aux[0])
             art2.append(aux[1])
 
         if algoritmo == 'DFS':
-            for u in vertice:
+            for u in vertices:
                 arvore[u] = Vertice(cor="B", adj = [])
                 for adjs in range(len(art1)):
                     if u == art1[adjs]: arvore[u].adj.append(art2[adjs])    
                         
         elif algoritmo == 'BFS':
-            for u in vertice:
+            for u in vertices:
                 if u != inicial:
                     arvore[u] = Vertice(cor="B", adj = [], d = math.inf, antecessor=None)
                 else:
@@ -54,10 +52,10 @@ class Buscas():
                     
         return arvore
 
-    def DFS(self, inicial, componentes=[]):
+    def DFS(self, inicial):
         
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -68,30 +66,30 @@ class Buscas():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
-        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
-        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
-        if inicial not in vertice: return jsonify(mensagem = "Essa aresta não existe no mapa.")
+        if (aux == False): return "O grafo não existe!", None
+        self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+        if inicial not in self.vertices: return "Essa aresta não existe no mapa.", None
         
         tempo = 0
-        arvore = self.iniciar_arvore(aresta, vertice, 'DFS')
+        arvore = self.iniciar_arvore(vertices = self.vertices, arestas = self.arestas, algoritmo='DFS', inicial=inicial)
         
         arvore[inicial].antecessor=None
         arvore[inicial].d=int(tempo)
         
-        for u in vertice:
+        for u in self.vertices:
             if arvore[u].cor == "B":
-                default = self.DFS_VISIT(arvore, u, tempo, componentes)
+                self.DFS_VISIT(arvore = arvore, u = u, tempo = tempo)
             
         resposta = {}
         for vrt in arvore.keys():
             resposta[vrt] = json.dumps(arvore[vrt].__dict__)
 
-        return jsonify( DFS = resposta), arvore
+        return "Sucesso", [resposta, arvore]
     
     def BFS(self, inicial):
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -102,13 +100,13 @@ class Buscas():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
-        aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
-        vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
-        if inicial not in vertice: return jsonify(mensagem = "Essa aresta não existe no mapa.")
+        if (aux == False): return "O grafo não existe!", None
+        self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+        if inicial not in self.vertices: return "Essa aresta não existe no mapa.", None
 
         tempo = 0
-        arvore = self.iniciar_arvore(aresta, vertice, 'BFS', inicial)
+        arvore = self.iniciar_arvore(vertices = self.vertices, arestas = self.arestas, algoritmo='BFS', inicial=inicial)
         Q = []
         Q.append(inicial)
         
@@ -127,5 +125,4 @@ class Buscas():
         for vrt in arvore.keys():
             resposta[vrt] = json.dumps(arvore[vrt].__dict__)
 
-        return jsonify( DFS = resposta)
-
+        return "Sucesso", resposta

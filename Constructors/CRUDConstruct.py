@@ -23,19 +23,19 @@ class Grafo():
                 spamreader = pd.read_csv('db_grafos.csv')
                 for coluna in spamreader.nome:
                     if(self.nome == coluna):
-                       return jsonify(mensagem = "O grafo já existe!")
+                       return "O grafo já existe!", None
             else:
                 spamwriter.writerow(["nome", "vertices", "arestas"])
             #gravando
             spamwriter.writerow([self.nome, self.vertices, self.arestas])
             bd.close()
 
-        return jsonify(mensagem ="Grafo adicionado com sucesso!", grafo = [self.nome, self.vertices, self.arestas])
+        return "Grafo adicionado com sucesso!", [self.nome, self.vertices, self.arestas]
     
     def adicionar_aresta(self, a, b):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -46,7 +46,7 @@ class Grafo():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         #pega a lista de aresta correta e trata os dados
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
@@ -67,17 +67,8 @@ class Grafo():
         spamreader.to_csv('db_grafos.csv', index=False)
 
 
-        return jsonify(mensagem = "Aresta adicionada com sucesso!")
+        return "Aresta adicionada com sucesso!", None
 
-    def adicionar_vertice(self):
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
-    def remover_grafo(self):
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
-    def remover_vertice(self):
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
-    def remover_aresta(self):
-        return jsonify(arestas = self.arestas, vertices = self.vertices)
-    
     
     
 

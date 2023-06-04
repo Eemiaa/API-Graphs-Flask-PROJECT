@@ -12,7 +12,7 @@ class Representacoes():
     def grafo_numero_vertices(self):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -23,16 +23,16 @@ class Representacoes():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
 
-        return jsonify(quantidadeVertices = len(vertice))
+        return "Sucesso", len(vertice)
 
     def grafo_numero_arestas(self):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -43,16 +43,16 @@ class Representacoes():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
 
-        return jsonify(quantidadeArestas = len(aresta))
+        return "Sucesso", len(aresta)
     
     def representacao_matrizes_adjacencias(self):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -63,12 +63,11 @@ class Representacoes():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
 
-        print(aresta)
         dataAdj = []
         
         for l in vertice:
@@ -86,12 +85,12 @@ class Representacoes():
 
         matrizAdj = pd.DataFrame(dataAdj, index = vertice, columns = vertice)
 
-        return jsonify( matrizAdjacencia = matrizAdj.to_json(orient="split"))
+        return "Sucesso", matrizAdj
     
     def representacao_listas_adjacencias(self):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -102,7 +101,7 @@ class Representacoes():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         vertice = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
@@ -120,12 +119,12 @@ class Representacoes():
                     if str({v:a}).replace(" ","") == i or str({a:v}).replace(" ","") == i: 
                         listaAdj[v].append(a)
 
-        return jsonify( listaAdjacencia = listaAdj)
+        return "Sucesso", listaAdj
     
     def grafo_aretas_adjacentes(self, a, b):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -136,7 +135,7 @@ class Representacoes():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         #adicionar aresta
         aresta = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
@@ -157,4 +156,4 @@ class Representacoes():
         if not aux: return jsonify(mensagem = "A aresta não existe!")
         if len(arestasadjacentes) == 0: return jsonify(mensagem = "Não existe aresta adjacente à ela!")
         
-        return jsonify(arestasAdjacentes = arestasadjacentes)
+        return "Sucesso", arestasadjacentes

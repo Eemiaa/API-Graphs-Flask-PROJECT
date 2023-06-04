@@ -2,11 +2,10 @@ import json
 import os
 import re
 import pandas as pd
-import heapq
 from heapq import heapify, heappop
-from flask import jsonify
 from Constructors.CRUDConstruct import Grafo
 from Models.BaseModels import Vertice
+from Constructors.RepresentacaoConstruct import Representacoes
 from math import inf
 
 
@@ -54,7 +53,7 @@ class Caminhos():
             peso[self.arestas[i]] = pesos[i]
         return peso
 
-    def matriz_peso(self, peso, aresta, vertice):
+    def matriz_peso(self, aresta, vertice, peso=None):
 
         dataAdj = []
 
@@ -62,6 +61,7 @@ class Caminhos():
             auxcoluna = []
             for j in range(len(vertice)):
                 auxcoluna.append(0)
+            
 
             for c in range(len(vertice)):
                 for i in aresta:
@@ -74,11 +74,11 @@ class Caminhos():
         matrizAdj = pd.DataFrame(dataAdj, index = vertice, columns = vertice)
 
         return matrizAdj
-
+    
     def Dijkstra(self, v_inicial, pesos):
         
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -89,13 +89,13 @@ class Caminhos():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
         self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
         
         #inicia os pesos
         if len(pesos) != len(self.arestas):
-            return jsonify(mensagem = "A quantidade de pesos não correspondem com a quantidade de arestas.")
+            return "A quantidade de pesos não correspondem com a quantidade de arestas.", None
         peso = self.iniciando_peso(pesos)
         #inicia a arvore
         arvore = self.iniciar_arvore(v_inicial)
@@ -114,11 +114,11 @@ class Caminhos():
         for vrt in arvore.keys():
             resposta[vrt] = json.dumps(arvore[vrt].__dict__)
         
-        return jsonify( S = S, arvore = resposta)
+        return "Sucesso", [S, resposta]
     
     def Bellman_Ford(self, v_inicial, pesos):
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -129,13 +129,13 @@ class Caminhos():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
         self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
         
         #inicia os pesos
         if len(pesos) != len(self.arestas):
-            return jsonify(mensagem = "A quantidade de pesos não correspondem com a quantidade de arestas.")
+            return "A quantidade de pesos não correspondem com a quantidade de arestas.", None
         peso = self.iniciando_peso(pesos)
         #inicia a arvore
         arvore = self.iniciar_arvore(v_inicial)
@@ -152,14 +152,14 @@ class Caminhos():
         for arest in self.arestas:
             aux = re.sub("|{|}|'","", arest).split(":") 
             if arvore[aux[1]].d > arvore[aux[0]].d + peso[str({aux[0]:aux[1]}).replace(" ","")]:
-                return jsonify(arvore = resposta, msg = "Existe um ciclo negativo.")
+                return "Existe um ciclo negativo.", resposta
     
-        return jsonify(arvore = resposta, msg = "Não existe um ciclo negativo.")
+        return "Não existe um ciclo negativo.", resposta
     
     def Floyd_Warshall(self, pesos):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -170,19 +170,19 @@ class Caminhos():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
         
         #print(len(self.arestas))
         if len(pesos) != len(self.arestas):
-            return jsonify(mensagem = "A quantidade de pesos não correspondem com a quantidade de arestas.")
+            return "A quantidade de pesos não correspondem com a quantidade de arestas.", None
         #inicia os pesos
         peso = self.iniciando_peso(pesos)
 
         #inicia a matriz de pesos
-        matriz_peso = self.matriz_peso(peso, self.arestas, self.vertices)
+        matriz_peso = self.matriz_peso(self.arestas, self.vertices, peso)
 
         #algoritmo em si
         antecessores = {}
@@ -194,12 +194,12 @@ class Caminhos():
                         matriz_peso.loc[self.vertices[v] , self.vertices[w]] = matriz_peso.loc[self.vertices[v], self.vertices[k]] + matriz_peso.loc[self.vertices[k], self.vertices[w]]
                         antecessores[self.vertices[v]] = self.vertices[k]
 
-        return jsonify(matriz_peso = matriz_peso.to_json(orient="split"), lista_antecessores = antecessores)
+        return "Sucesso", [matriz_peso, antecessores]
         
     def Componentes_Conexos(self):
 
         #verifica se o banco de dados está vazio:
-        if os.path.getsize('db_grafos.csv') == 0 : return jsonify(mensagem = "O csv está vazio!")
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
         aux = False
         numLinha = 0
         #le o banco de dados
@@ -210,7 +210,7 @@ class Caminhos():
                 aux = True
                 break
             numLinha+=1        
-        if (aux == False): return jsonify(mensagem = "O grafo não existe!")
+        if (aux == False): return "O grafo não existe!", None
 
         self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
         self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
@@ -223,7 +223,7 @@ class Caminhos():
             if(arvore[i].cor == "B"):
                 componentes[id] = []
                 self.DFS(inicial=i, arvore = arvore, componentes=componentes[id])
-        return jsonify(Componentes_Conectados = componentes )
+        return "Sucesso", componentes 
                 
     def DFS_VISIT(self, arvore, u, tempo, componentes):
         arvore[u].cor = "C"
@@ -255,4 +255,33 @@ class Caminhos():
         for vrt in arvore.keys():
             resposta[vrt] = json.dumps(arvore[vrt].__dict__)
 
-        
+    def Warshall(self):
+        #verifica se o banco de dados está vazio:
+        if os.path.getsize('db_grafos.csv') == 0 : return "O csv está vazio!", None
+        aux = False
+        numLinha = 0
+        #le o banco de dados
+        spamreader = pd.read_csv('db_grafos.csv')
+        #verifica se o grafo existe, a partir do nome
+        for coluna in spamreader.nome:
+            if(self.nome == coluna):
+                aux = True
+                break
+            numLinha+=1        
+        if (aux == False): return "O grafo não existe!", None
+
+        self.arestas = re.sub("|\[|\]|\"|\ ","", spamreader.arestas[numLinha]).split(",")
+        self.vertices = re.sub("|\[|\]|'|\ ","", spamreader.vertices[numLinha]).split(",")
+
+        #inicia a matriz de pesos
+        matriz_adj = Representacoes.representacao_matrizes_adjacencias(self)[1]
+
+        #algoritmo em sim
+        n = matriz_adj.shape[0]
+
+        for k in matriz_adj.index:
+            for i in matriz_adj.index:
+                for j in matriz_adj.index:
+                    matriz_adj[i][j] = matriz_adj[i][j] or (matriz_adj[i][k] and matriz_adj[k][j])
+
+        return "Sucesso", matriz_adj

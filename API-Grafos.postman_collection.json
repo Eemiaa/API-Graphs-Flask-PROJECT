@@ -339,7 +339,7 @@
 			"response": []
 		},
 		{
-			"name": "Bellman_Ford Copy",
+			"name": "Componentes_Conexos",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -364,6 +364,37 @@
 						"grafo",
 						"caminhos",
 						"Componentes_Conexos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Warshall",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\":\"B\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/grafo/caminhos/Warshall",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"grafo",
+						"caminhos",
+						"Warshall"
 					]
 				}
 			},
