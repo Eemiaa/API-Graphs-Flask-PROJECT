@@ -3,9 +3,9 @@ import os
 import re
 import pandas as pd
 from heapq import heapify, heappop
-from Constructors.CRUDConstruct import Grafo
+from Controllers.CRUDController import Grafo
 from Models.BaseModels import Vertice
-from Constructors.RepresentacaoConstruct import Representacoes
+from Controllers.RepresentacaoController import Representacoes
 from math import inf
 
 

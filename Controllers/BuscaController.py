@@ -3,7 +3,7 @@ import os
 import re
 import math
 import pandas as pd
-from Constructors.CRUDConstruct import Grafo
+from Controllers.CRUDController import Grafo
 from Models.BaseModels import Vertice
 
 class Buscas():

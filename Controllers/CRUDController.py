@@ -1,4 +1,3 @@
-from flask import jsonify
 import os
 import pandas as pd
 import re

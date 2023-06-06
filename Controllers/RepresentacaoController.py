@@ -2,8 +2,7 @@ import json
 import os
 import re
 import pandas as pd
-from flask import jsonify
-from Constructors.CRUDConstruct import Grafo
+from Controllers.CRUDController import Grafo
 
 class Representacoes():
     def __init__(self, nome=str):
@@ -153,7 +152,7 @@ class Representacoes():
                 elif a == [*temp][0] or b == [*temp][0]:
                     arestasadjacentes.append(i)
 
-        if not aux: return jsonify(mensagem = "A aresta não existe!")
-        if len(arestasadjacentes) == 0: return jsonify(mensagem = "Não existe aresta adjacente à ela!")
+        if not aux: return "A aresta não existe!", None
+        if len(arestasadjacentes) == 0: return "Não existe aresta adjacente à ela!", None
         
         return "Sucesso", arestasadjacentes
