@@ -1,8 +1,9 @@
+from Controllers.FluxodeRedesController import Redes
 from flask import jsonify, make_response, Blueprint, request
-from Constructors.CRUDConstruct import Grafo
-from Constructors.CaminhosConstruct import Caminhos
-from Constructors.RepresentacaoConstruct import Representacoes
-from Constructors.BuscaConstruct import Buscas
+from Controllers.CRUDController import Grafo
+from Controllers.CaminhosController import Caminhos
+from Controllers.RepresentacaoController import Representacoes
+from Controllers.BuscaController import Buscas
 
 routes_bp = Blueprint('Routes',__name__)
 
@@ -160,3 +161,14 @@ def warshall_alg():
     msg, fecho = grafo.Warshall()
 
     return make_response(jsonify(mensagem = msg, matriz_fecho_transitivo = fecho.to_json(orient="split") ))
+
+@routes_bp.route('/grafo/redes/FordFulkerson',methods=['GET'])
+def fordfulkerson_alg():
+    entrada = request.get_json()
+    nome, inicial, sink, pesos = entrada['nome'], entrada['inicial'], entrada['sink'], entrada['pesos']
+    grafo = Redes(nome=nome)
+
+    msg, resposta = grafo.FordFulkerson(inicial=inicial, sink=sink, pesos=pesos)
+
+    return make_response(jsonify(mensagem = msg, fluxo_maximo = resposta ))
+
