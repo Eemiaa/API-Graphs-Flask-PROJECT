@@ -93,7 +93,7 @@ class Redes():
             fluxo_caminho = math.inf
             s = sink
             while s != inicial:
-                fluxo_caminho = min(fluxo_caminho, peso[str({arvore[s].antecessor:s}).replace(" ","")])
+                if str({arvore[s].antecessor:s}).replace(" ","") in self.arestas: fluxo_caminho = min(fluxo_caminho, peso[str({arvore[s].antecessor:s}).replace(" ","")])
                 s = arvore[s].antecessor
             
             max_fluxo += fluxo_caminho
